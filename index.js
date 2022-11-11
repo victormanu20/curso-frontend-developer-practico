@@ -3,11 +3,12 @@ const MenuDesktop = document.querySelector('.desktop-menu');
 const menuHamIcon = document.querySelector('.menu');
 const menuMobile = document.querySelector('.mobile-menu');
 const iconCartShopping = document.querySelector('.navbar-shopping-cart')
-const asidecartShopping = document.querySelector('#aside-ShoppingCart')
+const asideCartShopping = document.querySelector('#aside-ShoppingCart')
 const cardsContainerProducts = document.querySelector('.cards-container')
 const asideInfoProducts = document.querySelector('#aside-infoProducts')
 const btnClose = document.querySelectorAll('.btn-close')
-console.log()
+const myOrderContent = document.querySelector('.list-myOrden')
+const lengthAddProduct = document.querySelector('#length-addProduct')
 // arreglo de productos
 const productList = [
     {
@@ -50,44 +51,51 @@ const productList = [
         price : 12000,
         image : 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
     }
-]
+];
 
-function isAsideCartShopping() {
-    const isAsideCartShopping = asidecartShopping.classList.contains('inactive');
-    if (!isAsideCartShopping){
-        asidecartShopping.classList.add('inactive')
-    }
-}
+//productos seleccionados
+let addProductsList = []
+
 
 
 function toogleMenuDesktop () {
-    isAsideCartShopping()
+    asideCartShopping.classList.add('inactive')
+    asideInfoProducts.classList.add('inactive')
     MenuDesktop.classList.toggle('inactive')
 }
 
 function toogleMenuMobile (){
-    isAsideCartShopping()
+    asideCartShopping.classList.add('inactive')
+    asideInfoProducts.classList.add('inactive')
     menuMobile.classList.toggle('inactive')
 }
 
 function toogleCartShopping () {
-    const isMenuMobileClosed = menuMobile.classList.contains('inactive');
-    const isMenuDesktopClosed = MenuDesktop.classList.contains('inactive');
-
-    if(!isMenuMobileClosed){
-        menuMobile.classList.add('inactive')
+    menuMobile.classList.add('inactive')
+    MenuDesktop.classList.add('inactive')
+    asideInfoProducts.classList.add('inactive')
+    asideCartShopping.classList.toggle('inactive')
+    if(!asideCartShopping.classList.contains('inactive')){
+        renderAddProducts()
     }
-    if(!isMenuDesktopClosed){
-        MenuDesktop.classList.add('inactive')
-    }
-    asidecartShopping.classList.toggle('inactive')
 }
-
+function toogleInfoProducts(){
+    asideCartShopping.classList.add('inactive');
+    menuMobile.classList.add('inactive')
+    MenuDesktop.classList.add('inactive')
+    asideInfoProducts.classList.remove('inactive')
+}
+function closeInfoProduct(){
+    asideCartShopping.classList.add('inactive');
+    asideInfoProducts.classList.add('inactive')
+}
 
 navbarEmail.addEventListener('click', toogleMenuDesktop)
 menuHamIcon.addEventListener('click', toogleMenuMobile)
 iconCartShopping.addEventListener('click', toogleCartShopping)
-
+btnClose.forEach((element) =>{
+    element.addEventListener('click', closeInfoProduct)
+})
 
 
 function renderProducts(arr) {
@@ -111,6 +119,7 @@ function renderProducts(arr) {
         const figure = document.createElement('figure');
         const iconCart = document.createElement('img');
         iconCart.setAttribute('src','./icons/bt_add_to_cart.svg')
+        iconCart.addEventListener('click',() => addProductCart(product))
     
         figure.append(iconCart);
         namePrice.append(name,price)
@@ -121,8 +130,16 @@ function renderProducts(arr) {
         cardsContainerProducts.appendChild(productCard);
     })
 }
+function addProductCart(product){
+    addProductsList.push(product)
+    lengthAddProduct.textContent= addProductsList.length
+    renderAddProducts()
+
+}
+
+
 function showInfoProducts (product) {
-    asideInfoProducts.classList.remove('inactive')
+    toogleInfoProducts()
     const ImageProduct = document.querySelector('.info-products__img-product')
     const descriptionProduct = document.querySelector('.info-products__description')
     const productPrice = document.querySelector('.info-products__price')
@@ -134,15 +151,28 @@ function showInfoProducts (product) {
     productName.textContent = product.name;
     descriptionProduct.append(productPrice,productName,productText)
 }
-console.log
-btnClose.forEach((element) =>{
-    element.addEventListener('click', closeInfoProduct)
-})
 
-function closeInfoProduct () {
-    asideInfoProducts.classList.add('inactive')
-    asidecartShopping.classList.add('inactive')
+function showAddProducts (product) {
+    const ShoppingCart = document.createElement('div');
+    ShoppingCart.classList.add('shopping-cart')
+    const figure = document.createElement('figure')
+    const ImageProduct = document.createElement('img')
+    const productName = document.createElement('p')
+    const productPrice = document.createElement('p')
+    const iconClose = document.createElement('img')
 
+    ImageProduct.setAttribute('src', product.image)
+    productName.textContent = product.name;
+    productPrice.textContent ='$' + product.price
+    iconClose.setAttribute('src', './icons/icon_close.png')
+    figure.append(ImageProduct)
+    ShoppingCart.append(figure,productName,productPrice,iconClose)
+    myOrderContent.append(ShoppingCart)
+}
+function renderAddProducts(){
+    addProductsList.forEach( (product) => {
+        showAddProducts(product)
+    })
 }
 
 renderProducts(productList);
