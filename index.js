@@ -3,8 +3,11 @@ const MenuDesktop = document.querySelector('.desktop-menu');
 const menuHamIcon = document.querySelector('.menu');
 const menuMobile = document.querySelector('.mobile-menu');
 const iconCartShopping = document.querySelector('.navbar-shopping-cart')
-const AsidecartShopping = document.querySelector('.product-detail')
+const asidecartShopping = document.querySelector('#aside-ShoppingCart')
 const cardsContainerProducts = document.querySelector('.cards-container')
+const asideInfoProducts = document.querySelector('#aside-infoProducts')
+const btnClose = document.querySelectorAll('.btn-close')
+console.log()
 // arreglo de productos
 const productList = [
     {
@@ -26,13 +29,33 @@ const productList = [
         name : 'mouse',
         price : 12000,
         image : 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+    },
+    {
+        name : 'mouse',
+        price : 12000,
+        image : 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+    },
+    {
+        name : 'mouse',
+        price : 12000,
+        image : 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+    },
+    {
+        name : 'mouse',
+        price : 12000,
+        image : 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+    },
+    {
+        name : 'mouse',
+        price : 12000,
+        image : 'https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
     }
 ]
 
 function isAsideCartShopping() {
-    const isAsideCartShopping = AsidecartShopping.classList.contains('inactive');
+    const isAsideCartShopping = asidecartShopping.classList.contains('inactive');
     if (!isAsideCartShopping){
-        AsidecartShopping.classList.add('inactive')
+        asidecartShopping.classList.add('inactive')
     }
 }
 
@@ -57,7 +80,7 @@ function toogleCartShopping () {
     if(!isMenuDesktopClosed){
         MenuDesktop.classList.add('inactive')
     }
-    AsidecartShopping.classList.toggle('inactive')
+    asidecartShopping.classList.toggle('inactive')
 }
 
 
@@ -74,6 +97,7 @@ function renderProducts(arr) {
     
         const imgProduct = document.createElement('img');
         imgProduct.setAttribute('src', product.image)
+        imgProduct.addEventListener('click',() => showInfoProducts(product))
     
         const productInfo = document.createElement('div');
         productInfo.classList.add('product-info')
@@ -97,6 +121,28 @@ function renderProducts(arr) {
         cardsContainerProducts.appendChild(productCard);
     })
 }
+function showInfoProducts (product) {
+    asideInfoProducts.classList.remove('inactive')
+    const ImageProduct = document.querySelector('.info-products__img-product')
+    const descriptionProduct = document.querySelector('.info-products__description')
+    const productPrice = document.querySelector('.info-products__price')
+    const productName = document.querySelector('.info-products__name')
+    const productText = document.querySelector('.info-products__text')
+    ImageProduct.setAttribute('src',product.image);
 
+    productPrice.textContent = '$' + product.price;
+    productName.textContent = product.name;
+    descriptionProduct.append(productPrice,productName,productText)
+}
+console.log
+btnClose.forEach((element) =>{
+    element.addEventListener('click', closeInfoProduct)
+})
+
+function closeInfoProduct () {
+    asideInfoProducts.classList.add('inactive')
+    asidecartShopping.classList.add('inactive')
+
+}
 
 renderProducts(productList);
